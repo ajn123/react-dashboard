@@ -1,4 +1,4 @@
-[Alt text](./screenshot.png)
+![Alt text](./screenshot.png)
 
 
 Feel free to fork and add your own components:
