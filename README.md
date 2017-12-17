@@ -9,3 +9,4 @@ Feel free to fork and add your own components:
 * Currency
 * Subreddit Feed
 * Quote of the day
+* Cute Cat Photos

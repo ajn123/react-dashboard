@@ -3,29 +3,31 @@ import './App.css';
 import axios from 'axios';
 import FontAwesome from 'react-fontawesome';
 import 'font-awesome/css/font-awesome.min.css';
-import { Navbar, Jumbotron, Button } from 'react-bootstrap';
 
 
 
 
-class List extends React.Component {
+class RedditList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { color: this.props.color };
-
+    this.state = { text: props.text };
   }
+
+
+
 
   render() {
     return(
     <ul>
-      {
-        this.props.data.slice(0,3).map(function(d) {
+      { this.props.text.length > 0 &&
+        this.props.text.slice(1,5).map(function(d) {
           return <li style={{color: 'white'}}> <a style={{color: 'white'}}  href={d.url}> {d.title} </a> </li>
         })
       }
     </ul>
     );
   }
+
 }
 
 
@@ -36,13 +38,12 @@ class Box extends React.Component {
     this.getRandomColor();
     this.setPrice = this.setPrice.bind(this);
     this.getPrice = this.getPrice.bind(this);
-
   }
 
   componentDidMount() {
     this.getPrice();
     this.getRandomColor();
-    this.interval = setInterval(this.getPrice, 5000);
+    this.interval = setInterval(this.getPrice, 3000);
   }
 
   componentWillUnmount() {
@@ -68,31 +69,34 @@ class Box extends React.Component {
 
   setPrice(data) {
     var Hello = this.props.parse(data);
-
-    if (typeof Hello == "string") {
+    if (this.props.type == "String") {
         this.setState({
-          text: Hello,
-          list: false
+          text: Hello
         });
     }
-    else if (Hello instanceof Array) {
-      var array = Hello.map(function(d) {
+    else if (this.props.type == "Image" && Hello != null) {
+      this.setState({
+        text: Hello
+      });
+
+    }
+    else if (this.props.type == "Array") {
+      const redditTitle = Hello.map(function(d) {
          return {title: d.data.title , url: d.data.url};
        });
        this.setState({
-         text: array,
-         list: true
+         text: redditTitle
        });
+
     }
-    else {
-    }
+
   }
 
 
 
   render() {
     return(
-      <div  class="col-4" style={{backgroundColor: this.state.color, border: '10px solid white'}}>
+      <div  className={"col-4"} style={{backgroundColor: this.state.color, border: '10px solid white'}}>
         <div style={{margin: '1em', color: this.state.textColor}}>
           <h2 style={{textAlign: 'center'}}> {this.props.title} </h2>
           <span className='fa-stack fa-lg' style={{display: 'table', margin:'0 auto'}}>
@@ -100,9 +104,10 @@ class Box extends React.Component {
             <FontAwesome name={this.props.iconName} stack='1x' />
           </span>
 
+          {this.props.type == "String" && <h1 className={"display-4"} style={{textAlign: 'center'}}> {(this.state.text)} </h1> }
+          {this.props.type == "Array"  && <RedditList text={this.state.text} /> }
+          {this.props.type == "Image"  && <img className={"img-fluid"} alt="image" src={this.state.text} /> }
 
-          {!this.state.list && <h1 class="display-4" style={{textAlign: 'center'}}>{(this.state.text)} </h1>}
-          {this.state.list && <List data={this.state.text} /> }
 
         </div>
       </div>
@@ -110,9 +115,13 @@ class Box extends React.Component {
   }
 }
 
+Box.defaultProps = {
+  type: "String"
+};
+
 const Bitcoin = (data) => {
     return data.bpi.USD.rate;
-}
+};
 
 const Ethereum = (data) => {
   return data.DISPLAY.ETH.USD.PRICE;
@@ -124,6 +133,11 @@ const RedditPodcasting = (json) => {
 
 const Qotd = (data) => {
   return data.contents.quotes[0].quote
+};
+
+const CatImage = (data) => {
+  const imageLink = data.match(/http:\/\/25.*png/g)
+  return imageLink;
 };
 
 
@@ -152,32 +166,45 @@ const Colors = [Orange, Black, Teal, Indigo, Chocolate, Pomegranite, Blue, Emera
 class App extends React.Component {
   render() {
     return(
-      <div class="container container-fluid">
-      <div class="row" >
-        <Box title="Bitcoin" iconName="bitcoin"
-          api="https://api.coindesk.com/v1/bpi/currentprice.json"
-          parse={Bitcoin}
-          colors={Colors} />
+      <div className={"container container-fluid"}>
+      <div className={"row"} >
 
-        <Box title="r/Podcasting" iconName="reddit"
-         api="https://www.reddit.com/r/podcasting.json"
+      <Box title="r/Podcasting" iconName="reddit"
+         api="https://www.reddit.com/r/Blogging.json"
          parse={RedditPodcasting}
-         colors={Colors} />
+         colors={Colors}
+         type="Array" />
+
+        <Box title="Bitcoin" iconName="bitcoin"
+            api="https://api.coindesk.com/v1/bpi/currentprice.json"
+            parse={Bitcoin}
+            colors={Colors} />
+
+
 
         <Box title="Ethereum" iconName="rocket"
-         api="https://min-api.cryptocompare.com/data/pricemultifull?fsyms=ETH&tsyms=USD"
-         parse={Ethereum}
-         colors={Colors} />
+           api="https://min-api.cryptocompare.com/data/pricemultifull?fsyms=ETH&tsyms=USD"
+           parse={Ethereum}
+           colors={Colors} />
 
       </div>
-      <div class="row row-eq-height" >
+      <div className={"row row-eq-height"} >
         <Box title="QOTD" iconName="heart"
-         api="http://quotes.rest/qod"
-         parse={Qotd}
-         colors={Colors} />
+           api="http://quotes.rest/qod"
+           parse={Qotd}
+           colors={Colors} />
 
+       <Box title="Cats" iconName="heart"
+          api="http://thecatapi.com/api/images/get?format=html&type=png"
+          parse={CatImage}
+          colors={Colors}
+          type="Image" />
 
       </div>
+
+
+
+
     </div>
     );
   }
