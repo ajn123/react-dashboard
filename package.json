@@ -14,7 +14,9 @@
     "react-fontawesome": "^1.6.1",
     "react-scripts": "1.0.17",
     "react-superagent": "^1.1.1",
-    "superagent": "^3.8.2"
+    "react-xml-parser": "^1.0.2",
+    "superagent": "^3.8.2",
+    "xml-parser": "^1.2.1"
   },
   "scripts": {
     "start": "react-scripts start",

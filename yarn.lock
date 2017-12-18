@@ -5599,6 +5599,10 @@ react-superagent@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/react-superagent/-/react-superagent-1.1.1.tgz#64823c6b1a7b556b721f6cecdf0d3eb9f43f7bfc"
 
+react-xml-parser@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-xml-parser/-/react-xml-parser-1.0.2.tgz#e51331ba5579e2f7df79d2e9c11088393e412f44"
+
 react@^16.2.0:
   version "16.2.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.2.0.tgz#a31bd2dab89bff65d42134fa187f24d054c273ba"
@@ -7078,6 +7082,12 @@ xml-char-classes@^1.0.0:
 xml-name-validator@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/xml-name-validator/-/xml-name-validator-2.0.1.tgz#4d8b8f1eccd3419aa362061becef515e1e559635"
+
+xml-parser@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/xml-parser/-/xml-parser-1.2.1.tgz#c31f4c34f2975db82ad013222120592736156fcd"
+  dependencies:
+    debug "^2.2.0"
 
 xtend@^4.0.0, xtend@^4.0.1, xtend@~4.0.1:
   version "4.0.1"

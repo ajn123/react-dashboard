@@ -3,8 +3,7 @@ import './App.css';
 import axios from 'axios';
 import FontAwesome from 'react-fontawesome';
 import 'font-awesome/css/font-awesome.min.css';
-
-
+import XMLParser from 'react-xml-parser';
 
 
 class RedditList extends React.Component {
@@ -13,15 +12,12 @@ class RedditList extends React.Component {
     this.state = { text: props.text };
   }
 
-
-
-
   render() {
     return(
     <ul>
       { this.props.text.length > 0 &&
-        this.props.text.slice(1,5).map(function(d) {
-          return <li style={{color: 'white'}}> <a style={{color: 'white'}}  href={d.url}> {d.title} </a> </li>
+        this.props.text.slice(0,this.props.length).map(function(d,k) {
+          return <li key={k} style={{color: 'white'}}> <a style={{color: 'white'}}  href={d.url}> {d.title} </a> </li>
         })
       }
     </ul>
@@ -29,6 +25,10 @@ class RedditList extends React.Component {
   }
 
 }
+
+RedditList.defaultProps = {
+  length: 8
+};
 
 
 class Box extends React.Component {
@@ -43,7 +43,7 @@ class Box extends React.Component {
   componentDidMount() {
     this.getPrice();
     this.getRandomColor();
-    this.interval = setInterval(this.getPrice, 3000);
+    this.interval = setInterval(this.getPrice, 9000);
   }
 
   componentWillUnmount() {
@@ -52,7 +52,9 @@ class Box extends React.Component {
 
 
   getPrice() {
-    axios.get(this.props.api).then((resp) => {
+    axios.get(this.props.api, {
+
+    }).then((resp) => {
         this.setPrice(resp.data);
       }
     );
@@ -74,20 +76,22 @@ class Box extends React.Component {
           text: Hello
         });
     }
-    else if (this.props.type == "Image" && Hello != null) {
-      this.setState({
-        text: Hello
-      });
-
+    else if (this.props.type == "Image") {
+      if (this.state.text == '' || this.state.text == null || Hello == '' || Hello == null) {
+        this.setState({
+          text: "http://25.media.tumblr.com/tumblr_lvp5ib5YEv1qmqimlo1_1280.png"
+        });
+      }
+      else {
+        this.setState({
+          text: Hello
+        });
+      }
     }
     else if (this.props.type == "Array") {
-      const redditTitle = Hello.map(function(d) {
-         return {title: d.data.title , url: d.data.url};
-       });
        this.setState({
-         text: redditTitle
+         text: Hello
        });
-
     }
 
   }
@@ -108,7 +112,6 @@ class Box extends React.Component {
           {this.props.type == "Array"  && <RedditList text={this.state.text} /> }
           {this.props.type == "Image"  && <img className={"img-fluid"} alt="image" src={this.state.text} /> }
 
-
         </div>
       </div>
     );
@@ -127,8 +130,12 @@ const Ethereum = (data) => {
   return data.DISPLAY.ETH.USD.PRICE;
 };
 
+
 const RedditPodcasting = (json) => {
-  return json.data.children;
+  var array = json.data.children.map(function(d) {
+     return {title: d.data.title , url: d.data.url};
+   });
+  return array;
 };
 
 const Qotd = (data) => {
@@ -140,6 +147,14 @@ const CatImage = (data) => {
   return imageLink;
 };
 
+const PsychologicalWarfarePodcast = (data) => {
+  var parse = require('xml-parser');
+  var obj = parse(data);
+  var array = obj.root.children[0].children.splice(18).map((d) => {
+    return {title: d.children[1].content ,url: d.children[3].content};
+  });
+  return array;
+};
 
 const Orange = {color: "#e67e22", textColor: 'white' };
 
@@ -157,11 +172,7 @@ const Blue = {color: "#3498db", textColor: 'white'};
 
 const Emerald = {color: "#2ecc71", textColor: 'white'};
 
-
 const Colors = [Orange, Black, Teal, Indigo, Chocolate, Pomegranite, Blue, Emerald];
-
-
-
 
 class App extends React.Component {
   render() {
@@ -179,8 +190,6 @@ class App extends React.Component {
             api="https://api.coindesk.com/v1/bpi/currentprice.json"
             parse={Bitcoin}
             colors={Colors} />
-
-
 
         <Box title="Ethereum" iconName="rocket"
            api="https://min-api.cryptocompare.com/data/pricemultifull?fsyms=ETH&tsyms=USD"
@@ -200,8 +209,13 @@ class App extends React.Component {
           colors={Colors}
           type="Image" />
 
-      </div>
+      <Box title="Psychological Warfare" iconName="rss"
+         api="http://feeds.soundcloud.com/users/soundcloud:users:316981916/sounds.rss"
+         parse={PsychologicalWarfarePodcast}
+         colors={Colors}
+         type="Array"/>
 
+     </div>
 
 
 
