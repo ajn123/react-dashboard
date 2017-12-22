@@ -177,7 +177,7 @@ class App extends React.Component {
       <div className={"row"} >
 
       <Box title="r/Podcasting" iconName="reddit"
-         api="https://www.reddit.com/r/Blogging.json"
+         api="https://www.reddit.com/r/podcasting.json"
          parse={RedditPodcasting}
          colors={Colors}
          type="Array" />
@@ -194,7 +194,7 @@ class App extends React.Component {
 
       </div>
       <div className={"row row-eq-height"} >
-        
+
 
      </div>
 
