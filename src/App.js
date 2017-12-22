@@ -194,22 +194,7 @@ class App extends React.Component {
 
       </div>
       <div className={"row row-eq-height"} >
-        <Box title="QOTD" iconName="heart"
-           api="http://quotes.rest/qod"
-           parse={Qotd}
-           colors={Colors} />
-
-       <Box title="Cats" iconName="heart"
-          api="http://thecatapi.com/api/images/get?format=html&type=png"
-          parse={CatImage}
-          colors={Colors}
-          type="Image" />
-
-      <Box title="Psychological Warfare" iconName="rss"
-         api="http://feeds.soundcloud.com/users/soundcloud:users:316981916/sounds.rss"
-         parse={PsychologicalWarfarePodcast}
-         colors={Colors}
-         type="Array"/>
+        
 
      </div>
 
