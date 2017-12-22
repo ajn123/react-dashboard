@@ -30,7 +30,6 @@ RedditList.defaultProps = {
   length: 8
 };
 
-
 class Box extends React.Component {
   constructor(props) {
     super(props);
@@ -49,7 +48,6 @@ class Box extends React.Component {
   componentWillUnmount() {
     clearInterval(this.interval);
   }
-
 
   getPrice() {
     axios.get(this.props.api, {
@@ -93,9 +91,7 @@ class Box extends React.Component {
          text: Hello
        });
     }
-
   }
-
 
 
   render() {
